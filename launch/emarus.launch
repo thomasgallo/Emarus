@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- VISUAL RECOGNITION NODE -->
+  <node name="image_feature" pkg="emarus" type="visual_node.py" output = "screen"/>
+
+</launch>
