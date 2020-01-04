@@ -11,6 +11,15 @@ The aim of the project is to develop a rocket league vehicule
 
 * **visual_node.py**: this node handles the image ball and the goal recognition using openCV librairi. It publish on the */camera/visual_recognition* topic the error between the ball and the center of the camera(*error_ball*), between the goal and the center of the camera (*error_goal*), finaly the distance between the ball and the camera(*distance_ball*) and two boolean to know if somethings is seen(*ball_seen* and *goal_seen*). To obtain the distance between the ball and the camera, a Triangle Similarity for object to Camera Distance need to be achieve.
 
+* **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribe to the */camera/visual_recognition* topic and thus get the data from the camera. From there, the node compute the transition that should be make from the current node to the next one. There is four states in total : 
+- FINDINGGOAL : In this state, if the goal is not visible, the robot should rotate on itself (around the z-axis) in order to have the goal in its visual field. If the goal is already visible, the transition will lead to the next state : FINDINGBALL.
+- FINDINGBALL : Here the principle is the same but with the ball. When the ball is seen, the trainsition leads to the state TARGETINGBALL.
+- TARGETINGBALL : In this state, the robot is supposed to align with the ball and to get close enough to kick it. This correction in distance and in alignment is done simoultaniously considering that the robot is holonomic. While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positionned to kick, the trainsition will lead to KICKINGBALL.
+- KICKINGBALL : assuming that the robot is ideally positionned with respect to the ball, this state will only give a strong impulse to the robot in the direction of the ball before going to the state FINDINGBALL to be ready to kick the ball again as soon as possible.
+
+Here is a scheme of the organisation of the states :
+![alt text](http://url/to/img.png)
+
 # Gettin Started
 
 ## Prerequisites
