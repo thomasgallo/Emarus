@@ -17,8 +17,7 @@ The aim of the project is to develop a rocket league vehicule
 3. TARGETINGBALL : In this state, the robot is supposed to align with the ball and to get close enough to kick it. This correction in distance and in alignment is done simoultaniously considering that the robot is holonomic. While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positionned to kick, the trainsition will lead to KICKINGBALL.
 4. KICKINGBALL : assuming that the robot is ideally positionned with respect to the ball, this state will only give a strong impulse to the robot in the direction of the ball before going to the state FINDINGBALL to be ready to kick the ball again as soon as possible.
 
-Here is a scheme of the organisation of the states :
-![alt text](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/image_for_readme_sm.png)
+![scheme of the organisation of the states](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/sm_scheme.png)
 
 # Gettin Started
 
