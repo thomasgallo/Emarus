@@ -4,4 +4,8 @@
   <!-- VISUAL RECOGNITION NODE -->
   <node name="image_feature" pkg="emarus" type="visual_node.py" output = "screen"/>
 
+  <!-- STATE MACHINE NODE -->
+  <node name="state_machine" pkg="emarus" type="simplified_sm.py" output = "screen"/>
+
+
 </launch>
