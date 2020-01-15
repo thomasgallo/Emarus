@@ -24,6 +24,8 @@ The aim of the project is to develop a rocket league vehicule
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
 - The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbitate" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this formula:
 ![orbital_strategy](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/orbital.png)
+- The "Disha" (the One that knows the direction): Here, the robot has an a priori knwoledge of the position of the goal. When it finishes the targeting phase, it will turn from an angle corresponding to the direction to the unseen goal. This algorithm rely on the assomption that the odometry is sufficiently good to update the direction. In addition, we need to integrate a correction algorithm which reinitialize the direction of the goal every time the goal is seen by the robot. 
+
 # Gettin Started
 
 ## Prerequisites
