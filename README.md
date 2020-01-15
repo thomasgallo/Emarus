@@ -23,7 +23,7 @@ The aim of the project is to develop a rocket league vehicule
 ### Strategies
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
 - The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbitate" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this formula:
-
+![orbital_strategy](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/Experimental Lab.png)
 # Gettin Started
 
 ## Prerequisites
