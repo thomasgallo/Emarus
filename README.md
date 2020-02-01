@@ -67,8 +67,8 @@ In the robot launch the camera node
 $ roslaunch raspicam_node camerav2_410x308_30fps.launch enable_raw:=true
 ```
 
-Run the visual recognition 
+Run the visual recognition and the state machine
 
 ```
-$ rosrun emarus visual_node.py 
+$ roslaunch emarus.launch
 ```
