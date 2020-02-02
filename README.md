@@ -94,5 +94,5 @@ $ roslaunch raspicam_node camerav2_410x308_30fps.launch enable_raw:=true
 Run the visual recognition and the state machine
 
 ```
-$ roslaunch emarus.launch
+$ roslaunch emarus emarus.launch
 ```
