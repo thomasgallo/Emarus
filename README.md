@@ -47,6 +47,29 @@ $ git clone https://github.com/ros-perception/vision_opencv.git
 ```
 
 ## Run the Project
+### Connecting the raspberry to the wifi
+
+Make sure that the Raspberry is correctly connected to the right wifi. To do so, plug the SD card to a computer with linux. Once it is done, go to *rootfs/etc/wpa_supplicant*. Then, execute ``` sudo nano wpa_supplicant.conf``` The configuration file of the Raspberry is now accessible. You can then change the network like so:
+```
+network={
+  ssid="name_of_wifi"
+  psk="corrsponding_password"
+}
+```
+Then save by doing CTRL+x .
+If the configuration of the wifi does not work properly, make sure that no spaces has been added to the wpa_supplicant.conf file as it is not well interpretetd.
+Also, make sure that ssh has been enabled in the Raspberry.
+You can now put the card back in the Raspberry and turn it on.
+A IP adress has been given to the Raspberry. To find it, execute ```ifconfig``` on the terminal of your computer which must be connected to the same wifi network. You need to give this IP adresse to your Raspberry. Go to the Raspberry's terminal and execute ``` sudo nano ~/.bashrc```. At the end of the file, you should replace or create:
+``` 
+export ROS_MASTER_URI=htpp://IP_adress_from_above:11311
+```
+11311 is the port on your computer dedicated to ROS. This line allows the Raspberry to know that it master will be your computer. In our case, only one Raspberry is used. 
+In the scenario where more than one Raspberry is used, you should do an ```ifconfig``` to get the IP adress of the Raspberry and define it as a ROS_HOSTNAME to make sure that the computer knows which Raspberry it is communicating with.
+
+Finally, save the nano and execute ``` source ~/.basrhc```
+
+### Launching the code
 
 Open a new terminal and launch on your laptop
 
@@ -60,6 +83,7 @@ Connect the robot to the ROS Master
 ```
 $ ssh pi@raspberrypi.local 
 ```
+The password is asked, it is "raspberry".
 
 In the robot launch the camera node
 
