@@ -7,8 +7,7 @@
 #define WHEEL_SEP_WIDTH 0.105 //(21cm/2)
 #define WHEEL_SEP_LENGTH 0.0475 //(9.5cm/2)
 #define WHEEL_RAD 0.04 //(radius of 4 cm)
-#define MIN_ROT -20.0 //to be computed !!!!!!
-#define MAX_ROT 20.0
+#define MAX_ROT 30.0
 
 
 /* Front Left motor (FL) configuration */
@@ -141,48 +140,48 @@ void loop() {
         if(wheel_FL >= 0){ //forward
             digitalWrite(OUTFLB, LOW);
             digitalWrite(OUTFLA, HIGH);
-            analogWrite(SPEEDFL, map_func(wheel_FL, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDFL, map_func(fabs(wheel_FL), 0, MAX_ROT, 0, 255));
         }
         else{ //backward
             digitalWrite(OUTFLA, LOW);
             digitalWrite(OUTFLB, HIGH);
-            analogWrite(SPEEDFL, map_func(wheel_FL, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDFL, map_func(fabs(wheel_FL), 0, MAX_ROT, 0, 255));
         }
 
         //front right
         if(wheel_FR >= 0){ //forward
             digitalWrite(OUTFRB, LOW);
             digitalWrite(OUTFRA, HIGH);
-            analogWrite(SPEEDFR, map_func(wheel_FR, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDFR, map_func(fabs(wheel_FR), 0, MAX_ROT, 0, 255));
         }
         else{ //backward
             digitalWrite(OUTFRA, LOW);
             digitalWrite(OUTFRB, HIGH);
-            analogWrite(SPEEDFR, map_func(wheel_FR, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDFR, map_func(fabs(wheel_FR), 0, MAX_ROT, 0, 255));
         }
         
         //rear left
         if(wheel_RL >= 0){ //forward
             digitalWrite(OUTRLB, LOW);
             digitalWrite(OUTRLA, HIGH);
-            analogWrite(SPEEDRL, map_func(wheel_RL, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDRL, map_func(fabs(wheel_RL), 0, MAX_ROT, 0, 255));
         }
         else{ //backward
             digitalWrite(OUTRLA, LOW);
             digitalWrite(OUTRLB, HIGH);
-            analogWrite(SPEEDRL, map_func(wheel_RL, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDRL, map_func(fabs(wheel_RL), 0, MAX_ROT, 0, 255));
         }
 
         //rear right
         if(wheel_RR >= 0){ //forward
             digitalWrite(OUTRRB, LOW);
             digitalWrite(OUTRRA, HIGH);
-            analogWrite(SPEEDRR, map_func(wheel_RR, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDRR, map_func(fabs(wheel_RR), 0, MAX_ROT, 0, 255));
         }
         else{ //backward
             digitalWrite(OUTRRA, LOW);
             digitalWrite(OUTRRB, HIGH);
-            analogWrite(SPEEDRR, map_func(wheel_RR, MIN_ROT, MAX_ROT, 0, 255));
+            analogWrite(SPEEDRR, map_func(fabs(wheel_RR), 0, MAX_ROT, 0, 255));
         }
     }
     motors_control_.spinOnce();
