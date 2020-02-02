@@ -85,10 +85,11 @@ $ ssh pi@raspberrypi.local
 ```
 The password is asked, it is "raspberry".
 
-In the robot launch the camera node
+In the robot launch the camera node and the rosserial node (for arduino)
 
 ```
 $ roslaunch raspicam_node camerav2_410x308_30fps.launch enable_raw:=true
+$ rosrun rosserial_python serial_node.py /dev/ttyACM0
 ```
 
 Run the visual recognition and the state machine
