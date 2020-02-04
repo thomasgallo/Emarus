@@ -14,18 +14,18 @@ class StateMachine:
 
         # Subscriber and publisher needed
         self.sub_ = rospy.Subscriber("/camera_node/visual_recognition",camera,self.callback) # Subscribe to the camera's topic
-        self.speed_ = rospy.Publisher("cmd_vel", Twist, queue_size = 10)    # Publish the velocity to send to the motor driver
+        self.speed_ = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)    # Publish the velocity to send to the motor driver
         self.nh_ = rospy.init_node('simplified_sm', anonymous=True)
 
         ## IMPORTANT ##
         # List of the possible states, write here to add one
-        self.states_ = ['ALIGNING','FINDINGBALL','TARGETINGBALL','STOPPING']
-        self.currentState_ = 1  # Cursor on the current state
+        self.states_ = ['ALIGNING','FINDINGBALL','TARGETINGBALL','STOPPING','KICKINGBALL']
+        self.currentState_ = self.states_.index("FINDINGBALL") # Cursor on the current state
 
         # Global variables
         self.amplitude_ = 2 # amplitude of the rotation around the z-axis
         self.threshold_angle_ = 25  # minimal accepted angle between the robot and the ball
-        self.threshold_distance_ = 15 # minimal accepted distance between the robot and the ball
+        self.threshold_distance_ = 25 # minimal accepted distance between the robot and the ball
         self.amp_z_ = 0.1
         self.coefficient_ = 0.02    # Coefficient corresponding to the amplitude of the movement along the y axis
         self.ball_distance_ = 0 # Distance between the ball and the robot in m
@@ -33,7 +33,6 @@ class StateMachine:
         self.error_goal_ = 0    # Difference in pixel between the robot and the goal
         self.isBallVisible_ = False
         self.isGoalVisible_ = False
-        self.theta = 0
         self.vel_msg_ = Twist() # Msg that will be published to the Arduino
 
 
@@ -55,15 +54,24 @@ class StateMachine:
            if self.isGoalVisible_ == False:
                if self.isBallVisible_ == True:
                    self.vel_msg_.linear.x = 1
-                   self.vel_msg_.angular.z = -3#*math.cos(self.theta)
-                   self.theta = self.theta + 0.1
+                   self.vel_msg_.angular.z = -3
                # else, go to the next state FINDINGBALL
                else:
-                   self.theta = 0
                    self.currentState_ = self.states_.index("FINDINGBALL")
            else:
                if self.isBallVisible_ == True:
-                   self.vel_msg_.linear.y = 3
+                   self.currentState_ = self.states_.index("KICKINGBALL")
+               else:
+                   self.currentState_ = self.states_.index("FINDINGBALL")
+
+       elif(self.currentState_ == self.states_.index("KICKINGBALL")):
+           rospy.loginfo("KICKINGBALL")
+           if abs(self.error_goal_) < 50:
+               self.vel_msg_.linear.y = 3
+           else:
+               self.vel_msg_.linear.x = 1*self.error_goal_/abs(self.error_goal_)
+               self.vel_msg_.angular.z = -3*self.error_goal_/abs(self.error_goal_)
+               self.currentState_ = self.states_.index("ALIGNING")
 
        elif(self.currentState_ == self.states_.index("FINDINGBALL")):
            rospy.loginfo("FINDINGBALL")
