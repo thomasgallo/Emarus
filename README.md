@@ -19,6 +19,18 @@ The aim of the project is to develop a rocket league vehicule
 
 ![scheme of the organisation of the states](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/sm_scheme.png)
 
+### How to compute the distance with an object
+In order to determine the distance from our camera to a known object, we have use triangle similarity.
+
+To achieve the triangle similarity we have an object with a known width W. We then place this object at a known distance D from our camera. We take a picture of our object using our camera and then measure the apparent width in pixels P. This allows us to derive the perceived focal length F of our camera:
+
+                                        F = (P x  D) / W
+
+Now trough image processing we are able in real time to compute the apparent width at each moment of the object. Therefor we can apply the triangle similarity to determine the distance of the object to the camera:
+
+                                        D’ = (W x F) / P
+
+This will be use to compute the distance with the ball.
 
 ### Strategies
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
@@ -35,7 +47,7 @@ This project is developed using [ROS](http://wiki.ros.org/kinetic/Installation/U
 * rosdistro: kinetic
 * rosversion: 1.12.13
 
-### ROS vision openCV
+### ROS vision openCV and Imutils
 
 In order to achieve the visual recognition we use a repository that provide packaging of the popular OpenCV library for ROS.
 
@@ -43,7 +55,10 @@ Clone the packages in the src folder
 
 ```
 $ git clone https://github.com/ros-perception/vision_opencv.git
-
+```
+Function from the imutils library also as been used and need to be install:
+```
+$ sudo pip install imutils
 ```
 
 ## Run the Project
@@ -92,7 +107,7 @@ $ roslaunch raspicam_node camerav2_410x308_30fps.launch enable_raw:=true
 $ rosrun rosserial_python serial_node.py /dev/ttyACM0
 ```
 
-Run the visual recognition and the state machine
+Run the visual recognition and the state machine on your computer
 
 ```
 $ roslaunch emarus emarus.launch
