@@ -115,5 +115,7 @@ $ roslaunch emarus emarus.launch
 
 ### Result
 The robot has not yet been tested on a real field but on one created with the what wobsereve could used. The result can observed in the following video.
-![](name-of-giphy.gif)
+
+![](20200205_234115.gif)
+
 The robot is perfectly achieving the strategie put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happend with a real ball.
