@@ -9,7 +9,7 @@ The aim of the project is to develop a rocket league vehicule
 
 ### Description of the Nodes
 
-* **visual_node.py**: this node handles the image ball and the goal recognition using openCV librairi. It publish on the */camera/visual_recognition* topic the error between the ball and the center of the camera(*error_ball*), between the goal and the center of the camera (*error_goal*), finaly the distance between the ball and the camera(*distance_ball*) and two boolean to know if somethings is seen(*ball_seen* and *goal_seen*). To obtain the distance between the ball and the camera, a Triangle Similarity for object to Camera Distance need to be achieve.
+* **visual_node.py**: this node handles the image ball and the goal recognition using openCV librairy. It publish on the */camera/visual_recognition* topic the error between the ball and the center of the camera(*error_ball*), between the goal and the center of the camera (*error_goal*), finaly the distance between the ball and the camera(*distance_ball*) and two boolean to know if somethings is seen(*ball_seen* and *goal_seen*). A personalize message has been created to achieve that. Add to this, to obtain the distance between the ball and the camera, a Triangle Similarity for object to Camera Distance need to be achieve.
 
 * **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribe to the */camera/visual_recognition* topic and thus get the data from the camera. From there, the node compute the transition that should be make from the current node to the next one. There is four states in total : 
 1. FINDINGGOAL : In this state, if the goal is not visible, the robot should rotate on itself (around the z-axis) in order to have the goal in its visual field. If the goal is already visible, the transition will lead to the next state : FINDINGBALL.
@@ -24,11 +24,11 @@ In order to determine the distance from our camera to a known object, we have us
 
 To achieve the triangle similarity we have an object with a known width W. We then place this object at a known distance D from our camera. We take a picture of our object using our camera and then measure the apparent width in pixels P. This allows us to derive the perceived focal length F of our camera:
 
-                                        F = (P x  D) / W
+                                          F = (P x  D) / W
 
 Now trough image processing we are able in real time to compute the apparent width at each moment of the object. Therefor we can apply the triangle similarity to determine the distance of the object to the camera:
 
-                                        D’ = (W x F) / P
+                                          D’ = (W x F) / P
 
 This will be use to compute the distance with the ball.
 
@@ -112,3 +112,8 @@ Run the visual recognition and the state machine on your computer
 ```
 $ roslaunch emarus emarus.launch
 ```
+
+### Result
+The robot has not yet been tested on a real field but on one created with the what wobsereve could used. The result can observed in the following video.
+![](name-of-giphy.gif)
+The robot is perfectly achieving the strategie put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happend with a real ball.
