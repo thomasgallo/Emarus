@@ -55,7 +55,7 @@ This will be use to compute the distance with the ball.
 
 ### Strategies
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
-- The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbit" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this formula:
+- The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbit" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this idea:
 ![orbital_strategy](https://raw.githubusercontent.com/thomasgallo/emarus/master/orbital.png)
 - The "Disha" (the One that knows the direction): Here, the robot has an a priori knowledge of the position of the goal. When it finishes the targeting phase, it will turn from an angle corresponding to the direction to the unseen goal. This algorithm rely on the assumption that the odometry is sufficiently good to update the direction. In addition, we need to integrate a correction algorithm which reinitialize the direction of the goal every time the goal is seen by the robot. 
 
