@@ -187,6 +187,6 @@ $ roslaunch emarus emarus.launch
 ### Result
 The robot has not yet been tested on a real field but on a temporary one we created for testing purposes. The result can be observed in the following video.
 
-![](20200205_234115.gif)
+![](20200206_152517.gif)
 
 The robot is perfectly achieving the strategy put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happened with a real ball.
