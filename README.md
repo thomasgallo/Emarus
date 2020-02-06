@@ -200,3 +200,8 @@ The second video is a screen recording of the laptop screen with the object dete
 ![](ezgif.com-optimize.gif)
 
 The robot is perfectly achieving the strategy put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happened with a real ball.
+
+## Authors
+* Kenza Bourbakri: kenzaboubakri@gmail.com
+* Thomas Gallo: thomas.gallo00@gmail.com
+* Théo Dépalle: theodepalle@gmail.com
