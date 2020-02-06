@@ -205,3 +205,4 @@ The robot is perfectly achieving the strategy put in place. The fake ball create
 * Kenza Bourbakri: kenzaboubakri@gmail.com
 * Thomas Gallo: thomas.gallo00@gmail.com
 * Théo Dépalle: theodepalle@gmail.com
+* Amrita Suresh: amrita9suresh@gmail.com
