@@ -10,7 +10,7 @@ The aim of the project is to develop a rocket league vehicle.
 ### Description of achitecture
 Here is the ROS achitecture of our project running obtain using the *rqt_graph* command.
 
-![scheme of the organisation of architecture](https://raw.githubusercontent.com/thomasgallo/emarus/master/rqt_graph.png)
+![scheme of the organisation of architecture](https://raw.githubusercontent.com/thomasgallo/emarus/master/rosgraph_exp.png)
 
 
 ### Description of the Nodes
