@@ -79,8 +79,11 @@ Thirst we defined the frame attached to the center of the robot as following :
 For a requested velocity (x0, y0, rz0) of the robot's center, we compute each wheels velocity as following :
 
 > wheel_FL = (1.0/WHEEL_RAD) * (y0 - x0 - (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+
 > wheel_FR = (1.0/WHEEL_RAD) * (y0 + x0 + (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+
 > wheel_RL = (1.0/WHEEL_RAD) * (y0 + x0 - (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+
 > wheel_RR = (1.0/WHEEL_RAD) * (y0 - x0 + (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
 
 with :
