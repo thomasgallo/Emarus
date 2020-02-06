@@ -9,9 +9,16 @@ The aim of the project is to develop a rocket league vehicle.
 
 ### Description of the Nodes
 
+On the PC side :
 * **visual_node.py**: This node handles the image ball and the goal recognition using openCV library. It publish on the */camera/visual_recognition* topic the error between the ball and the center of the camera(*error_ball*), between the goal and the center of the camera (*error_goal*), finally the distance between the ball and the camera(*distance_ball*) and two boolean to know if somethings is seen(*ball_seen* and *goal_seen*). A personalize message has been created to achieve that. Add to this, to obtain the distance between the ball and the camera, a Triangle Similarity for object to Camera Distance need to be achieve.
 
-* **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribes to the */camera/visual_recognition* topic and thus gets the data from the camera. From there, the node computes the transition that should be made from the current node to the next one. There are five states in total.
+* **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribes to the */camera/visual_recognition* topic and thus gets the data from the camera. From there, the node computes the transition that should be made from the current node to the next one. There are five states in total. In each states the node publish on the topic "/cmd_vel" the requested velocity of the center of the robot (vx, vy, rz).
+
+On the Raspberry side :
+* **serial_node.py**: This node is included in the package rosserial_python ([available here](https://github.com/ros-drivers/rosserial.git)). This node handle the serial communication with the Arduino, it make a bridge between ROS and Arduino.  Thus thanks to it we are able to programm the Arduino in ROS, it will send to the Arduino the requested topics.
+
+On the Arduino :
+* On the Arduino there is a "node" that subscribe to the topic "/cmd_vel", compute the desired rotation for each 4 wheels, and then send the requested velocity to the motors thanks to a PWM signal. 
 
 ### Description of the States
 1. **FINDINGBALL** : If the robot cannot see the ball at the moment, it rotate on itself with a current speed until it can see it. When the ball is seen, the transition leads to the state TARGETINGBALL.
@@ -78,6 +85,16 @@ This project is developed using [ROS](http://wiki.ros.org/kinetic/Installation/U
 * rosdistro: kinetic
 * rosversion: 1.12.13
 
+### ROS rosserial
+On the RaspberryPi you need to install the package rosserial :
+```
+cd <ws>/src
+git clone https://github.com/ros-drivers/rosserial.git
+cd <ws>
+catkin_make
+catkin_make install
+```
+
 ### ROS vision openCV and Imutils
 
 In order to achieve the visual recognition we use a repository that provide packaging of the popular OpenCV library for ROS.
@@ -106,9 +123,9 @@ Then save by doing CTRL+x .
 If the configuration of the wifi does not work properly, make sure that no spaces has been added to the wpa_supplicant.conf file as it is not well interpreted.
 Also, make sure that ssh has been enabled in the Raspberry.
 You can now put the card back in the Raspberry and turn it on.
-A IP address has been given to the Raspberry. To find it, execute ```ifconfig``` on the terminal of your computer which must be connected to the same wifi network. You need to give this IP address to your Raspberry. Go to the Raspberry's terminal and execute ``` sudo nano ~/.bashrc```. At the end of the file, you should replace or create:
+Now execute ```ifconfig``` on the terminal of your computer which must be connected to the same wifi network of the raspberry. You need to give this IP address to your Raspberry. Go to the Raspberry's terminal (```ssh pi@raspberrypi.local```) and execute ``` sudo nano ~/.bashrc```. At the end of the file, you should replace or create:
 ``` 
-export ROS_MASTER_URI=htpp://IP_adress_from_above:11311
+export ROS_MASTER_URI=htpp://IP_adress_of_your_computer:11311
 ```
 11311 is the port on your computer dedicated to ROS. This line allows the Raspberry to know that it master will be your computer. In our case, only one Raspberry is used. 
 In the scenario where more than one Raspberry is used, you should do an ```ifconfig``` to get the IP address of the Raspberry and define it as a ROS_HOSTNAME to make sure that the computer knows which Raspberry it is communicating with.
@@ -131,7 +148,7 @@ $ ssh pi@raspberrypi.local
 ```
 The password is asked, it is "raspberry".
 
-In the robot launch the camera node and the rosserial node (for arduino)
+In the robot, launch the camera node and the rosserial node (for arduino)
 
 ```
 $ roslaunch raspicam_node camerav2_410x308_30fps.launch enable_raw:=true
