@@ -2,22 +2,40 @@
 ROS Workspace for experimental project (rocket league)
 
 ## The Project
-This Project has been developed for the experimental course of the master degree program in Robotics Engineering at University of Genoa.
+This Project has been developed for the Experimental Robotics Laboratory course under the masters degree program in Robotics Engineering at University of Genoa.
 
 ### The Objective
-The aim of the project is to develop a rocket league vehicule
+The aim of the project is to develop a rocket league vehicle.
 
 ### Description of the Nodes
 
-* **visual_node.py**: this node handles the image ball and the goal recognition using openCV librairy. It publish on the */camera/visual_recognition* topic the error between the ball and the center of the camera(*error_ball*), between the goal and the center of the camera (*error_goal*), finaly the distance between the ball and the camera(*distance_ball*) and two boolean to know if somethings is seen(*ball_seen* and *goal_seen*). A personalize message has been created to achieve that. Add to this, to obtain the distance between the ball and the camera, a Triangle Similarity for object to Camera Distance need to be achieve.
+* **visual_node.py**: This node handles the image ball and the goal recognition using openCV library. It publish on the */camera/visual_recognition* topic the error between the ball and the center of the camera(*error_ball*), between the goal and the center of the camera (*error_goal*), finally the distance between the ball and the camera(*distance_ball*) and two boolean to know if somethings is seen(*ball_seen* and *goal_seen*). A personalize message has been created to achieve that. Add to this, to obtain the distance between the ball and the camera, a Triangle Similarity for object to Camera Distance need to be achieve.
 
-* **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribe to the */camera/visual_recognition* topic and thus get the data from the camera. From there, the node compute the transition that should be make from the current node to the next one. There is four states in total : 
-1. FINDINGGOAL : In this state, if the goal is not visible, the robot should rotate on itself (around the z-axis) in order to have the goal in its visual field. If the goal is already visible, the transition will lead to the next state : FINDINGBALL.
-2. FINDINGBALL : Here the principle is the same but with the ball. When the ball is seen, the trainsition leads to the state TARGETINGBALL.
-3. TARGETINGBALL : In this state, the robot is supposed to align with the ball and to get close enough to kick it. This correction in distance and in alignment is done simoultaniously considering that the robot is holonomic. While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positionned to kick, the trainsition will lead to KICKINGBALL.
-4. KICKINGBALL : assuming that the robot is ideally positionned with respect to the ball, this state will only give a strong impulse to the robot in the direction of the ball before going to the state FINDINGBALL to be ready to kick the ball again as soon as possible.
+* **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribes to the */camera/visual_recognition* topic and thus gets the data from the camera. From there, the node computes the transition that should be made from the current node to the next one. There are five states in total : 
+1. FINDINGBALL : If the robot cannot see the ball at the moment, it rotate on itself with a current speed until it can see it. When the ball is seen, the transition leads to the state TARGETINGBALL.
+2. TARGETINGBALL : In this state, the robot is supposed to align with the ball and to get close enough to kick it. This correction in distance and in alignment is done simultaneously (if both are needed) considering that the robot is holonomic. Nevertheless, the priority is given to the realignment by including the inverse of the misalignment with the ball in the computation of the linear speed along the y-axis. To have a smooth realignment, the angular speed around the z-axis is proportionnal to the misalignment like so: 
+
+
+                                          W = T1 x angular_misalignment_ball
+                                          V = T2 / abs(angular_misalignment_ball)
+
+Where W is the angular speed, V the linear speed, T1 and T2 two coefficients empirically computed.
+If not realignment is needed, then the angular speed is null and the linear velocity is a constant.
+While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positioned to kick, the transition will lead to ALIGNING in order to align with the goal.
+3. ALIGNING : In this state, the robot has already found the ball and is close to the ball. Now it orbits around the ball until it finds the goal. To orbit, the robot is given a linear velocity along the x-axis as well as a negative angular velocity around the z-axis. 
+Once the goal is found, we try to align the ball and the goal in the same line of sight so that the ball can be kicked in the right direction. Here the alignment speed of the robot should take into acount the direction of the ball to guarantee that the orbital is done in the right direction of rotation:
+
+
+                                          W = -A1 x sign(angular_misalignment_goal)
+                                          V = A2 x sign(angular_misalignment_goal)
+
+Where W is the angular speed, V the linear speed, A1 and A2 two coefficients empirically computed.
+Once aligned, the next state will be KICKINGBALL. If in the process of orbiting, the ball goes out of the field of view, then we go back to the FINDINGBALL state.
+4. KICKINGBALL : Assuming that the robot is ideally positioned with respect to the ball, this state will only give a strong impulse to the robot to kick the ball in the direction of the goal. If the ball has not reached the goal, then go to the state FINDINGBALL to be ready to kick the ball again as soon as possible.
 
 ![scheme of the organisation of the states](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/sm_scheme.png)
+
+Please note that in this state machine architecture, no stopping condition has been given. We have just assume that the robot will keep playing forever. Nevertheless, if the position of the robot could be known (using a motion Arena for instance) then a stopping condition would be implemented and would be as following: "if the position and the orientation of the robot indicates that it is in front of the goal and that it can see the ball and the goal, then the ball must be in the goal".
 
 ### How to compute the distance with an object
 In order to determine the distance from our camera to a known object, we have use triangle similarity.
@@ -34,11 +52,11 @@ This will be use to compute the distance with the ball.
 
 ### Strategies
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
-- The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbitate" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this formula:
+- The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbit" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this formula:
 ![orbital_strategy](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/orbital.png)
-- The "Disha" (the One that knows the direction): Here, the robot has an a priori knwoledge of the position of the goal. When it finishes the targeting phase, it will turn from an angle corresponding to the direction to the unseen goal. This algorithm rely on the assomption that the odometry is sufficiently good to update the direction. In addition, we need to integrate a correction algorithm which reinitialize the direction of the goal every time the goal is seen by the robot. 
+- The "Disha" (the One that knows the direction): Here, the robot has an a priori knowledge of the position of the goal. When it finishes the targeting phase, it will turn from an angle corresponding to the direction to the unseen goal. This algorithm rely on the assumption that the odometry is sufficiently good to update the direction. In addition, we need to integrate a correction algorithm which reinitialize the direction of the goal every time the goal is seen by the robot. 
 
-# Gettin Started
+# Getting Started
 
 ## Prerequisites
 
@@ -68,21 +86,21 @@ Make sure that the Raspberry is correctly connected to the right wifi. To do so,
 ```
 network={
   ssid="name_of_wifi"
-  psk="corrsponding_password"
+  psk="corresponding_password"
 }
 ```
 Then save by doing CTRL+x .
-If the configuration of the wifi does not work properly, make sure that no spaces has been added to the wpa_supplicant.conf file as it is not well interpretetd.
+If the configuration of the wifi does not work properly, make sure that no spaces has been added to the wpa_supplicant.conf file as it is not well interpreted.
 Also, make sure that ssh has been enabled in the Raspberry.
 You can now put the card back in the Raspberry and turn it on.
-A IP adress has been given to the Raspberry. To find it, execute ```ifconfig``` on the terminal of your computer which must be connected to the same wifi network. You need to give this IP adresse to your Raspberry. Go to the Raspberry's terminal and execute ``` sudo nano ~/.bashrc```. At the end of the file, you should replace or create:
+A IP address has been given to the Raspberry. To find it, execute ```ifconfig``` on the terminal of your computer which must be connected to the same wifi network. You need to give this IP address to your Raspberry. Go to the Raspberry's terminal and execute ``` sudo nano ~/.bashrc```. At the end of the file, you should replace or create:
 ``` 
 export ROS_MASTER_URI=htpp://IP_adress_from_above:11311
 ```
 11311 is the port on your computer dedicated to ROS. This line allows the Raspberry to know that it master will be your computer. In our case, only one Raspberry is used. 
-In the scenario where more than one Raspberry is used, you should do an ```ifconfig``` to get the IP adress of the Raspberry and define it as a ROS_HOSTNAME to make sure that the computer knows which Raspberry it is communicating with.
+In the scenario where more than one Raspberry is used, you should do an ```ifconfig``` to get the IP address of the Raspberry and define it as a ROS_HOSTNAME to make sure that the computer knows which Raspberry it is communicating with.
 
-Finally, save the nano and execute ``` source ~/.basrhc```
+Finally, save the nano and execute ``` source ~/.bashrc```
 
 ### Launching the code
 
@@ -114,8 +132,8 @@ $ roslaunch emarus emarus.launch
 ```
 
 ### Result
-The robot has not yet been tested on a real field but on one created with the what wobsereve could used. The result can observed in the following video.
+The robot has not yet been tested on a real field but on a temporary one we created for testing purposes. The result can be observed in the following video.
 
 ![](20200205_234115.gif)
 
-The robot is perfectly achieving the strategie put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happend with a real ball.
+The robot is perfectly achieving the strategy put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happened with a real ball.
