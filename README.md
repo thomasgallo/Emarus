@@ -70,6 +70,25 @@ D’ = (W x F) / P
 
 This will be use to compute the distance with the ball.
 
+### How to compute the rotation velocity for each wheels
+Thirst we defined the frame attached to the center of the robot as following : 
+- y is the vector oriented to the front of the robot, a positive velocity on y make the robot moving forward.
+- x is the vector oriented to the left of the robot, a positive velocity on x make the robot moving left. 
+- rz is the rotation around the z axis, a positive rotation on z make the robot rotating anticlockwise around its center.
+
+For a requested velocity (x0, y0, rz0) of the robot's center, we compute each wheels velocity as following :
+    wheel_FL = (1.0/WHEEL_RAD) * (y0 - x0 - (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+    wheel_FR = (1.0/WHEEL_RAD) * (y0 + x0 + (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+    wheel_RL = (1.0/WHEEL_RAD) * (y0 + x0 - (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+    wheel_RR = (1.0/WHEEL_RAD) * (y0 - x0 + (WHEEL_SEP_WIDTH + WHEEL_SEP_LENGTH) * rz0)
+
+with :
+- WHEEL_RAD = the wheel's radius
+- WHEEL_SEP_WIDTH = (the distance between the center of the rear wheel and the center of the front wheel) / 2
+- WHEEL_SEP_LENGTH = (the distance between the center of the two rear wheels) / 2
+
+
+
 ### Strategies
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
 - The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbit" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this idea:
