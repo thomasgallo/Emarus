@@ -121,20 +121,18 @@ class image_feature:
         # only proceed if at least one contour was found
     	if len(cnts_goal) > 0:
     		# find the largest contour in the mask, then use it to compute the minimum enclosing circle and centroid
-    		c = max(cnts_goal, key=cv2.contourArea)
+		c = max(cnts_goal, key=cv2.contourArea)
+		#((x, y), radius_goal) = cv2.minEnclosingCircle(c)
+		x,y,w,h = cv2.boundingRect(c) #get bounding rectangle
+		M = cv2.moments(c)
+		center_goal = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
-            #((x, y), radius_goal) = cv2.minEnclosingCircle(c)
-            x,y,w,h = cv2.boundingRect(c) #get bounding rectangle
-
-    		M = cv2.moments(c)
-    		center_goal = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-
-    		if radius_goal > 10:
+    		if (abs(w) > 10 and abs(h) > 10):
                 # compute the error between the center of the goal and the center of the camera
     			self.visual_msg.error_goal = center_goal[0] - w/2
     			self.visual_msg.goal_seen = True
     			# draw the circle and centroid on the frame
-                cv2.rectangle(image_np,(x,y),(x+w,y+h),(0,255,0),2) #draw a rectangle around the goal
+                	cv2.rectangle(image_np,(x,y),(x+w,y+h),(0,255,0),2) #draw a rectangle around the goal
     			#cv2.circle(image_np, (int(x), int(y)), int(radius_goal),(0, 255, 255), 2)
     			cv2.circle(image_np, center_goal, 5, (0, 0, 255), -1)
     		else:

@@ -1,13 +1,11 @@
+#!/usr/bin/env python
+
 
 """
 This script implements a simple state machine that defines the various possible states of the robot, 
 the state transition rules and the actions to be performed in each state.
 
 """
-
-
-#!/usr/bin/env python
-
 import rospy
 import sys
 import math
