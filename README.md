@@ -36,7 +36,7 @@ Once the goal is found, we try to align the ball and the goal in the same line o
 
 4. KICKINGBALL : Assuming that the robot is ideally positioned with respect to the ball, this state will only give a strong impulse to the robot to kick the ball in the direction of the goal. If the ball has not reached the goal, then go to the state FINDINGBALL to be ready to kick the ball again as soon as possible.
 
-![scheme of the organisation of the states](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/sm_scheme.png)
+![scheme of the organisation of the states](https://raw.githubusercontent.com/thomasgallo/emarus/master/sm_scheme.png)
 
 Please note that in this state machine architecture, no stopping condition has been given. We have just assume that the robot will keep playing forever. Nevertheless, if the position of the robot could be known (using a motion Arena for instance) then a stopping condition would be implemented and would be as following: "if the position and the orientation of the robot indicates that it is in front of the goal and that it can see the ball and the goal, then the ball must be in the goal".
 
@@ -56,7 +56,7 @@ This will be use to compute the distance with the ball.
 ### Strategies
 During a preliminary phase, we have discussed the different strategies that could be implemented on the robot. Depending on the performance and the precision of the robot, especially regarding the self localisation, we thought about :
 - The "orbiteur": Once the ball is targetting and the robot is aligned with it, it will "orbit" around the ball until being also align and in front of the goal. Then the robot can kick with a higher success rate. This technique rely on this formula:
-![orbital_strategy](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/orbital.png)
+![orbital_strategy](https://raw.githubusercontent.com/thomasgallo/emarus/master/orbital.png)
 - The "Disha" (the One that knows the direction): Here, the robot has an a priori knowledge of the position of the goal. When it finishes the targeting phase, it will turn from an angle corresponding to the direction to the unseen goal. This algorithm rely on the assumption that the odometry is sufficiently good to update the direction. In addition, we need to integrate a correction algorithm which reinitialize the direction of the goal every time the goal is seen by the robot. 
 
 # Getting Started
