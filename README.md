@@ -13,15 +13,17 @@ The aim of the project is to develop a rocket league vehicle.
 
 * **simplified_sm.py**: This node is responsible for the decision-making process. The node subscribes to the */camera/visual_recognition* topic and thus gets the data from the camera. From there, the node computes the transition that should be made from the current node to the next one. There are five states in total : 
 1. FINDINGBALL : If the robot cannot see the ball at the moment, it rotate on itself with a current speed until it can see it. When the ball is seen, the transition leads to the state TARGETINGBALL.
+
 2. TARGETINGBALL : In this state, the robot is supposed to align with the ball and to get close enough to kick it. This correction in distance and in alignment is done simultaneously (if both are needed) considering that the robot is holonomic. Nevertheless, the priority is given to the realignment by including the inverse of the misalignment with the ball in the computation of the linear speed along the y-axis. To have a smooth realignment, the angular speed around the z-axis is proportionnal to the misalignment like so: 
 
 
                                           W = T1 x angular_misalignment_ball
                                           V = T2 / abs(angular_misalignment_ball)
 
-Where W is the angular speed, V the linear speed, T1 and T2 two coefficients empirically computed.
-If not realignment is needed, then the angular speed is null and the linear velocity is a constant.
-While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positioned to kick, the transition will lead to ALIGNING in order to align with the goal.
+  Where W is the angular speed, V the linear speed, T1 and T2 two coefficients empirically computed.
+  If not realignment is needed, then the angular speed is null and the linear velocity is a constant.
+  While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positioned to kick, the transition will lead to ALIGNING in order to align with the goal.
+
 3. ALIGNING : In this state, the robot has already found the ball and is close to the ball. Now it orbits around the ball until it finds the goal. To orbit, the robot is given a linear velocity along the x-axis as well as a negative angular velocity around the z-axis. 
 Once the goal is found, we try to align the ball and the goal in the same line of sight so that the ball can be kicked in the right direction. Here the alignment speed of the robot should take into acount the direction of the ball to guarantee that the orbital is done in the right direction of rotation:
 
@@ -29,8 +31,9 @@ Once the goal is found, we try to align the ball and the goal in the same line o
                                           W = -A1 x sign(angular_misalignment_goal)
                                           V = A2 x sign(angular_misalignment_goal)
 
-Where W is the angular speed, V the linear speed, A1 and A2 two coefficients empirically computed.
-Once aligned, the next state will be KICKINGBALL. If in the process of orbiting, the ball goes out of the field of view, then we go back to the FINDINGBALL state.
+  Where W is the angular speed, V the linear speed, A1 and A2 two coefficients empirically computed.
+  Once aligned, the next state will be KICKINGBALL. If in the process of orbiting, the ball goes out of the field of view, then we go back to the FINDINGBALL state.
+
 4. KICKINGBALL : Assuming that the robot is ideally positioned with respect to the ball, this state will only give a strong impulse to the robot to kick the ball in the direction of the goal. If the ball has not reached the goal, then go to the state FINDINGBALL to be ready to kick the ball again as soon as possible.
 
 ![scheme of the organisation of the states](https://raw.githubusercontent.com/thomasgallo/emarus/thomas/sm_scheme.png)
