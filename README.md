@@ -18,8 +18,12 @@ The aim of the project is to develop a rocket league vehicle.
 
 2. **TARGETINGBALL** : In this state, the robot is supposed to align with the ball and to get close enough to kick it. This correction in distance and in alignment is done simultaneously (if both are needed) considering that the robot is holonomic. Nevertheless, the priority is given to the realignment by including the inverse of the misalignment with the ball in the computation of the linear speed along the y-axis. To have a smooth realignment, the angular speed around the z-axis is proportionnal to the misalignment like so: 
 
-                                          W = T1 x angular_misalignment_ball
-                                          V = T2 / abs(angular_misalignment_ball)
+<p align="center">
+W = T1 x angular_misalignment_ball
+</p> 
+<p align="center">
+V = T2 / abs(angular_misalignment_ball)
+</p> 
 
 Where W is the angular speed, V the linear speed, T1 and T2 two coefficients empirically computed. If not realignment is needed, then the angular speed is null and the linear velocity is a constant.
 While the robot is not sufficiently close and aligned, the next state will be TARGETINGBALL. If in the targeting process, the ball is lost, the next state will be FINDINGBALL. Finally, when the robot is correctly positioned to kick, the transition will lead to ALIGNING in order to align with the goal.
@@ -27,8 +31,12 @@ While the robot is not sufficiently close and aligned, the next state will be TA
 3. **ALIGNING** : In this state, the robot has already found the ball and is close to the ball. Now it orbits around the ball until it finds the goal. To orbit, the robot is given a linear velocity along the x-axis as well as a negative angular velocity around the z-axis. 
 Once the goal is found, we try to align the ball and the goal in the same line of sight so that the ball can be kicked in the right direction. Here the alignment speed of the robot should take into acount the direction of the ball to guarantee that the orbital is done in the right direction of rotation:
 
-                                          W = -A1 x sign(angular_misalignment_goal)
-                                          V = A2 x sign(angular_misalignment_goal)
+<p align="center">
+W = -A1 x sign(angular_misalignment_goal)
+</p>                                       
+<p align="center">
+V = A2 x sign(angular_misalignment_goal)
+</p>                                       
 
 Where W is the angular speed, V the linear speed, A1 and A2 two coefficients empirically computed. Once aligned, the next state will be KICKINGBALL. If in the process of orbiting, the ball goes out of the field of view, then we go back to the FINDINGBALL state.
 
@@ -43,11 +51,15 @@ In order to determine the distance from our camera to a known object, we have us
 
 To achieve the triangle similarity we have an object with a known width W. We then place this object at a known distance D from our camera. We take a picture of our object using our camera and then measure the apparent width in pixels P. This allows us to derive the perceived focal length F of our camera:
 
-                                          F = (P x  D) / W
+<p align="center">
+F = (P x  D) / W
+</p>
 
 Now trough image processing we are able in real time to compute the apparent width at each moment of the object. Therefor we can apply the triangle similarity to determine the distance of the object to the camera:
 
-                                          D’ = (W x F) / P
+<p align="center">
+D’ = (W x F) / P
+</p>
 
 This will be use to compute the distance with the ball.
 
