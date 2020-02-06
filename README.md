@@ -7,6 +7,12 @@ This Project has been developed for the Experimental Robotics Laboratory course 
 ### The Objective
 The aim of the project is to develop a rocket league vehicle.
 
+### Description of achitecture
+Here is the ROS achitecture of our project running obtain using the *rqt_graph* command.
+
+![scheme of the organisation of architecture](https://raw.githubusercontent.com/thomasgallo/emarus/master/rqt_graph.png)
+
+
 ### Description of the Nodes
 
 On the PC side :
@@ -185,8 +191,12 @@ $ roslaunch emarus emarus.launch
 ```
 
 ### Result
-The robot has not yet been tested on a real field but on a temporary one we created for testing purposes. The result can be observed in the following video.
+The robot has not yet been tested on a real field but on a temporary one we created for testing purposes. The result can be observed in the following video. The first video show the robot moving in the field.
 
 ![](20200206_152517.gif)
+
+The second video is a screen recording of the laptop screen with the object detection and the state machine output.
+
+![](ezgif.com-optimize.gif)
 
 The robot is perfectly achieving the strategy put in place. The fake ball created does not roll so is not able to reach easily the goal but this will not happened with a real ball.
